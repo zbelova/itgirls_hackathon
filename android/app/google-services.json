@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "107281105598",
+    "firebase_url": "https://itgirls-hackathon-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "itgirls-hackathon",
+    "storage_bucket": "itgirls-hackathon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107281105598:android:5345eba552bfe7312ad4ef",
+        "android_client_info": {
+          "package_name": "com.example.itgirls_hackathon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSZIOIjDY4xIR7FoWmgbSjfq_MvR1l8ZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
