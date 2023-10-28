@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //     title: 'Доделать задачи по хакатону',
     //     description: 'Сделать экран списка задач. Экран помидорного таймера, где таймер будет отображать текущее оставшееся время. Можно поставить на паузу',
     //     isDone: false,
-    //     duration: 30));
+    //     duration: 4));
     _initData();
     _initUser();
   }
@@ -42,7 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _notesDatasource.readAll().listen((event) {
       final map = event.snapshot.value as Map<dynamic, dynamic>?;
       if (map != null) {
-        setState(() {
+       if(mounted) {
+         setState(() {
           _tasks = map.entries
               .map((e) => Task(
                     key: e.key as String,
@@ -53,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ))
               .toList();
         });
+       }
       }
     });
   }
@@ -114,6 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),),
                               )
 
+                            ] else ...[
+                              CircularProgressIndicator()
                             ]
                           ],
                         ),

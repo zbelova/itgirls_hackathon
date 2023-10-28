@@ -13,15 +13,12 @@ class FirebaseDatasource {
       // Сначала генерируем новую ветку с помощью push() и потом в эту же ветку
       // добавляем запись
 
-      await ref.push().set(
-        {
-          "title": task.title,
-          "description": task.description,
-          "isDone": task.isDone,
-          'duration': task.duration,
-
-        }
-      );
+      await ref.push().set({
+        "title": task.title,
+        "description": task.description,
+        "isDone": task.isDone,
+        'duration': task.duration,
+      });
     } catch (e) {
       print(e);
     }
@@ -38,12 +35,17 @@ class FirebaseDatasource {
     }
   }
 
-  Future<void> edit(String note, String key) async {
+  Future<void> edit(Task task) async {
     try {
       final id = FirebaseAuth.instance.currentUser?.uid;
       if (id == null) return;
-      final ref = FirebaseDatabase.instance.ref("notes/$id");
-      await ref.child(key).set(note);
+      final ref = FirebaseDatabase.instance.ref("Tasks/$id");
+      await ref.child(task.key!).set({
+        "title": task.title,
+        "description": task.description,
+        "isDone": task.isDone,
+        'duration': task.duration,
+      });
     } catch (e) {}
   }
 
