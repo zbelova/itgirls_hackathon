@@ -97,14 +97,14 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                       },
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           const Icon(
                             Icons.arrow_back_ios,
                             color: Colors.black,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 2,
                           ),
                           Container(
@@ -182,7 +182,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                             //_current = widget.task.duration;
                           });
                         },
-                        child: Icon(Icons.pause),
+                        child: const Icon(Icons.pause),
                       ),
                   ],
                 ),

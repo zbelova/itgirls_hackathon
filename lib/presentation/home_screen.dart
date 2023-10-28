@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Task> _tasks = [];
-  FirebaseDatasource _notesDatasource = FirebaseDatasource();
+  FirebaseDatasource _tasksDatasource = FirebaseDatasource();
   AuthDatasource _authDatasource = AuthDatasource();
   UserModel? user;
 
@@ -34,27 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _initUser() async {
     user = await _authDatasource.getUser();
-    setState(() {
-    });
+    setState(() {});
   }
 
   void _initData() {
-    _notesDatasource.readAll().listen((event) {
+    _tasksDatasource.readAll().listen((event) {
       final map = event.snapshot.value as Map<dynamic, dynamic>?;
       if (map != null) {
-       if(mounted) {
-         setState(() {
-          _tasks = map.entries
-              .map((e) => Task(
-                    key: e.key as String,
-                    title: e.value['title'] as String,
-                    description: e.value['description'] as String,
-                    isDone: e.value['isDone'] as bool,
-                    duration: e.value['duration'] as int,
-                  ))
-              .toList();
-        });
-       }
+        if (mounted) {
+          setState(() {
+            _tasks = map.entries
+                .map((e) => Task(
+                      key: e.key as String,
+                      title: e.value['title'] as String,
+                      description: e.value['description'] as String,
+                      isDone: e.value['isDone'] as bool,
+                      duration: e.value['duration'] as int,
+                    ))
+                .toList();
+          });
+        }
       }
     });
   }
@@ -75,6 +74,62 @@ class _HomeScreenState extends State<HomeScreen> {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.transparent,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              //add new task
+              showGeneralDialog(
+                  context: context,
+                  pageBuilder: (context, anim1, anim2) {
+                    var _nameController = TextEditingController();
+                    var _descriptionController = TextEditingController();
+                    var _durationController = TextEditingController();
+                    return AlertDialog(
+                      title: const Text('Добавить задачу'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                              hintText: 'Название',
+                            ),
+                          ),
+                          TextField(
+                            controller: _descriptionController,
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              hintText: 'Описание',
+                            ),
+                          ),
+                          TextField(
+                            controller: _durationController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: 'Время в минутах',
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Отмена'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _tasksDatasource.write(Task(title: _nameController.text, description: _descriptionController.text, isDone: false, duration: int.parse(_durationController.text)));
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Добавить'),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            child: const Icon(Icons.add),
+          ),
           body: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 5),
@@ -85,39 +140,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15, bottom: 20),
                     child: Container(
-                      decoration: BoxDecoration(
-
-
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xffb9f4ff)
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0xffb9f4ff)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            if(user != null) ...[
+                            if (user != null) ...[
                               Text(
                                 'Привет, ${user!.name}',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 ),
                               ),
-                              SizedBox(width: 6,),
-                              Icon(Icons.person, size: 25, color: Colors.pink[500],),
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              Icon(
+                                Icons.person,
+                                size: 25,
+                                color: Colors.pink[500],
+                              ),
                               InkWell(
                                 onTap: () async {
                                   await _authDatasource.logout();
                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                                 },
-                                child: Text('(выйти)', style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.pink[500],
-                                ),),
+                                child: Text(
+                                  '(выйти)',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.pink[500],
+                                  ),
+                                ),
                               )
-
                             ] else ...[
-                              CircularProgressIndicator()
+                              const CircularProgressIndicator()
                             ]
                           ],
                         ),
@@ -143,27 +201,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             InkWell(
                               onTap: () {
-                                if(!_tasks[index].isDone)
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PomodoroScreen(
-                                      task: _tasks[index],
+                                if (!_tasks[index].isDone) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PomodoroScreen(
+                                        task: _tasks[index],
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               },
                               child: ListTile(
                                 title: Text(
                                   _tasks[index].title,
-                                  style: TextStyle(fontSize: 17),
+                                  style: const TextStyle(fontSize: 17),
                                 ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       _tasks[index].description,
-                                      style: TextStyle(fontSize: 15),
+                                      style: const TextStyle(fontSize: 15),
                                     ),
                                     const SizedBox(
                                       height: 8,
@@ -177,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                                         child: Text(
                                           formatMinutes(_tasks[index].duration),
-                                          style: TextStyle(fontSize: 15),
+                                          style: const TextStyle(fontSize: 15),
                                         ),
                                       ),
                                     ),
@@ -196,13 +255,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                               ),
                             ),
+                           Align(
+                              alignment: Alignment.centerLeft,
+                              child:InkWell(
+                                onTap: () {
+                                  _tasksDatasource.remove(_tasks[index].key!);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(left:12, top:3, bottom: 3),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                          Icons.delete,
+                                          color: Colors.blueGrey[600],
+                                          size: 20,
+                                        ),
+                                      SizedBox(width: 3,),
+                                      Text('Удалить',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.blueGrey[600],
+                                        ),),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                            ),
                             const Divider(),
                           ],
                         );
                       },
                     ),
                   ),
-
                 ],
               ),
             ),

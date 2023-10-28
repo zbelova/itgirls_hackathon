@@ -53,7 +53,7 @@ class FirebaseDatasource {
     try {
       final id = FirebaseAuth.instance.currentUser?.uid;
       if (id == null) return;
-      final ref = FirebaseDatabase.instance.ref("notes/$id");
+      final ref = FirebaseDatabase.instance.ref("Tasks/$id");
       await ref.child(key).remove();
     } catch (e) {}
   }
