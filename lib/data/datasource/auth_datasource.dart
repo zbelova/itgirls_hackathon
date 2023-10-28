@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import '../model/user_model.dart';
+
 class AuthDatasource {
   Future<String> login(String email, String password) async {
     try {
@@ -12,9 +14,7 @@ class AuthDatasource {
       // Код ошибка для случая, если пользователь не найден
       return e.code;
     }
-
   }
-
 
   //регистрация пользователя
   Future<String> signUp(String email, String password, String name) async {
@@ -48,8 +48,6 @@ class AuthDatasource {
     return "Ошибка";
   }
 
-
-
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -68,7 +66,7 @@ class AuthDatasource {
       // Меняем пароль на новый
       await user.updatePassword(newPassword);
       return true;
-    } catch(e) {
+    } catch (e) {
       // print(e);
       // В случае ошибки выводим сообщение об ошибке
       return false;
@@ -78,6 +76,23 @@ class AuthDatasource {
   bool isUserLoggedIn() {
     return FirebaseAuth.instance.currentUser != null;
   }
+
 // get user
 
+  Future<UserModel> getUser() async {
+    try {
+      final User user = FirebaseAuth.instance.currentUser!;
+      final ref = FirebaseDatabase.instance.ref("users/${user.uid}");
+      final snapshot = await ref.get();
+      if (snapshot.value == null) return UserModel(name: 'name', email: 'email');
+      final result = (snapshot.value as Map?);
+      return UserModel(
+        name: result!['fullName'],
+        email: result['email'],
+      );
+    } catch (e) {
+       print('Ошибка при получении данных пользователя: $e');
+      rethrow;
+    }
+  }
 }

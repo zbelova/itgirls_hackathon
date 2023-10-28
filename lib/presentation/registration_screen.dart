@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:itgirls_hackathon/data/auth_datasource.dart';
+import 'package:itgirls_hackathon/data/datasource/auth_datasource.dart';
 import '../main.dart';
 import 'home_screen.dart';
 

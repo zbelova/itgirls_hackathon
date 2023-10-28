@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:itgirls_hackathon/data/auth_datasource.dart';
+import 'package:itgirls_hackathon/data/datasource/auth_datasource.dart';
 import 'package:itgirls_hackathon/presentation/registration_screen.dart';
 
 import '../main.dart';
@@ -36,13 +36,41 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'assets/logo.jpg',
+                        fit: BoxFit.cover,
+                        width: 100,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,),
                   Container(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: const Text(
-                      'Название приложения',
+                      'Pomogator',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 35,
+                       // color: Colors.white,
                       ),
                     ),
                   ),

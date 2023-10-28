@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:itgirls_hackathon/data/auth_datasource.dart';
+import 'package:itgirls_hackathon/data/datasource/auth_datasource.dart';
 import 'package:itgirls_hackathon/presentation/home_screen.dart';
 import 'package:itgirls_hackathon/presentation/login_screen.dart';
-
-import 'data/firebase_datasource.dart';
+import 'data/datasource/firebase_datasource.dart';
 import 'firebase_options.dart';
 
 final getIt = GetIt.instance;
