@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:itgirls_hackathon/data/auth_datasource.dart';
-
-//import '../data/model/user_model.dart';
 import '../main.dart';
 import 'home_screen.dart';
 
@@ -13,9 +11,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // final _nameController = TextEditingController();
-  // final _phoneController = TextEditingController();
-  // final _adressController = TextEditingController();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordAgainController = TextEditingController();
@@ -35,32 +31,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding: const EdgeInsets.only(left: 30, right: 30, top: 0),
               child: Column(
                 children: [
-                  // _buildTextFormField(
-                  //     controller: _nameController,
-                  //     context: context,
-                  //     labelText: 'Имя'),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   children: [
-                  //     Container(
-                  //         padding: const EdgeInsets.only(top: 15, right: 5),
-                  //         child: const Text(
-                  //           '+7',
-                  //           style: TextStyle(fontSize: 18),
-                  //         )),
-                  //     SizedBox(width: 5),
-                  //     Expanded(
-                  //       child: _buildTextFormField(
-                  //           controller: _phoneController,
-                  //           context: context,
-                  //           labelText: 'Телефон'),
-                  //     ),
-                  //   ],
-                  // ),
-                  // _buildTextFormField(
-                  //     controller: _adressController,
-                  //     context: context,
-                  //     labelText: 'Адрес доставки'),
+                  _buildTextFormField(
+                      controller: _nameController,
+                      context: context,
+                      labelText: 'Имя'),
                   _buildTextFormField(controller: _emailController, context: context, labelText: 'Электронная почта'),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
@@ -84,13 +58,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 resultCheck = _checkRegistration(
-                    // nameController: _nameController,
-                    // phoneController: _phoneController,
-                    // adressController: _adressController,
+                     nameController: _nameController,
                     emailController: _emailController,
                     passwordController: _passwordController,
                     passwordAgainController: _passwordAgainController)!;
@@ -144,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String result;
 
     try {
-      result = await getIt.get<AuthDatasource>().signUp(_emailController.text, _passwordController.text);
+      result = await getIt.get<AuthDatasource>().signUp(_emailController.text, _passwordController.text, _nameController.text);
       if (result == 'success') {
         Navigator.pushReplacement(
           context,
@@ -182,36 +154,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 List<String>? _checkRegistration(
     {
-    //   required TextEditingController nameController,
-    // required TextEditingController phoneController,
-    // required TextEditingController adressController,
+       required TextEditingController nameController,
+
     required TextEditingController emailController,
     required TextEditingController passwordController,
     required TextEditingController passwordAgainController}) {
   List<String> error = [];
-  // String? name = nameController.text;
-  // String? phone = phoneController.text;
-  // String? adress = adressController.text;
+   String? name = nameController.text;
+
   String? email = emailController.text;
   String? password = passwordController.text;
   String? passwordAgain = passwordAgainController.text;
   if (
-  // name == '' || phone == '' || adress == '' ||
+   name == '' ||
       email == '' || password == '' || passwordAgain == '') {
     error.add('Не все поля заполнены');
-    //return 'Не все поля заполнены';
+
   }
   if (validateEmail(email) != 1) {
     error.add('Ошибка в формате электронной почты');
-    // return 'Ошибка в формате электронной почты';
+
   }
-  // if (validatePhone(phone) != true) {
-  //   error.add('Ошибка в формате телефона');
-  //   //return 'Ошибка в формате телефона';
-  // }
   if (password != passwordAgain) {
     error.add('Пароли не совпадают');
-    //return 'Пароли не совпадают';
+
   }
   return error;
 }
@@ -252,11 +218,3 @@ int validateEmail(String value) {
   }
 }
 
-bool validatePhone(String value) {
-  RegExp regex = RegExp(r'^\d{10}$');
-  if (!regex.hasMatch(value)) {
-    return false;
-  } else {
-    return true;
-  }
-}

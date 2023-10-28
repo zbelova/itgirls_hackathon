@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AuthDatasource {
   Future<String> login(String email, String password) async {
@@ -16,12 +17,21 @@ class AuthDatasource {
 
 
   //регистрация пользователя
-  Future<String> signUp(String email, String password) async {
+  Future<String> signUp(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      final id = FirebaseAuth.instance.currentUser?.uid;
+      if (id == null) return "Ошибка";
+      // Берём ссылку на корень дерева с записями для текущего пользователя
+      final ref = FirebaseDatabase.instance.ref("users/$id");
+      // Сначала генерируем новую ветку с помощью push() и потом в эту же ветку
+      // добавляем запись
+
+      await ref.set({'email': email, 'fullName': name});
 
       return "success";
     } on FirebaseAuthException catch (e) {

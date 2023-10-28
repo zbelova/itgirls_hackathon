@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:itgirls_hackathon/data/firebase_datasource.dart';
 
@@ -22,8 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //_authDatasource.login('a@a.com', '111111');
-    //_notesDatasource.write('Hello world');
-
+    //_notesDatasource.write('test note2');
+    // var id = FirebaseAuth.instance.currentUser?.uid;
+    // print(id);
+    // final ref = FirebaseDatabase.instance.ref("users/$id");
+    // print(ref);
+    // ref.push().set({'email': 'a@a.com', 'name': "name"});
+    // ref.push().set('test user');
     _initData();
 
   }
